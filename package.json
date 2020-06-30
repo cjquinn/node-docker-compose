@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "entry": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.16.4",
+    "pg-promise": "^10.5.7",
+    "pug": "^3.0.0"
+  },
+  "devDependencies": {}
+}
