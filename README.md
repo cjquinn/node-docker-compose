@@ -4,15 +4,15 @@ For a good overview of what Docker is and how to get setup with it check out the
 
 # 1 - Building an image
 
-In order to run our application we need Node.js, specifically version 10. Lets also assume that it is not possible to install Node.js on our computer or that it is much more difficult then it actually is! This is where Docker images come in, we can create an image that has Node.js installed and is able to run our application. We can then use this image to start a container, which you can think of as a process, which will be running our application.
+In order to run our application we need Node.js, specifically version 10. Lets also assume that it is not possible to install Node.js on our computer or that it is much more difficult then it actually is! This is where Docker images come in, we can create an image that has Node.js installed and is able to run our application. We can then use this image to start a container, which you can think of as a process, and it will be running our application.
 
-Images are built by creating a [`Dockerfile`](https://docs.docker.com/engine/reference/builder/) and using the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command - `docker build -f /path/to/a/Dockerfile` - at this point you can also give it a name amongst other properties.
+Images are built by creating a [`Dockerfile`](https://docs.docker.com/engine/reference/builder/) and using the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command, at this point you can also give it a name amongst other properties.
 
 One handy thing you can do when creating your own images is extend pre-existing ones. You can use [docker hub](https://hub.docker.com/) to search for potential starting points. For example you could start with the [Alpine](https://hub.docker.com/_/alpine) image which is a super small implementation of Alpine Linux. You could then install Node.js and anything else you needed (There might also be a quicker way :)).
 
-Another thing an image can have is a command. You can think of this as the executable of the image or the entry point. In a Dockerfile it is normally the last line and when you start a container is what we be ran. For example if we wanted out container to start a node process we might add `CMD ["node", "server.js"]`.
+Another thing an image can have is a command. You can think of this as the executable of the image or the entry point. In a `Dockerfile` it is normally the last line and when you start a container is what we be ran. For example if we wanted our container to start a node process we might add `CMD ["node", "server.js"]`.
 
-## Requirementsde
+## Requirements
 
 - [Node.js v10](https://nodejs.org/en/blog/release/v10.0.0/)
 - [nodemon](https://www.npmjs.com/package/nodemon)
@@ -27,18 +27,18 @@ Another thing an image can have is a command. You can think of this as the execu
 
 ## Testing
 
-Once this is done you should be able to go to http://localhost in your browser. You might notice nothing happens in the browser but your command line goes wild!
+Once you have built your image and enter your `docker run` command you should be able to go to http://localhost in your browser. You might notice nothing happens in the browser but your command line goes wild!
 
 ## Resources:
 
 - How to build and run an image - https://docs.docker.com/get-started/part2/
-- Dockerfile reference - https://docs.docker.com/engine/reference/builder/
+- `Dockerfile` reference - https://docs.docker.com/engine/reference/builder/
 - Command to build an image - https://docs.docker.com/engine/reference/commandline/build/
 - Command to run a container - https://docs.docker.com/engine/reference/run/
 
 ## Solution
 
-### Dockerfile
+### `Dockerfile`
 
 ```
 FROM node:10
@@ -67,7 +67,6 @@ Fortunately for us there is a [Postgres Docker image](https://hub.docker.com/_/p
 ## Requirements
 
 - Postgres running
-- Default user called `zwift`
 - SQL in `./docker-entrypoint-initdb.d` is ran when starting the container
 
 ## Hints
