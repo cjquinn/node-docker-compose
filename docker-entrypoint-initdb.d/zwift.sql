@@ -1,4 +1,4 @@
-CONNECT TO DEFAULT;
+\c
 
 CREATE TABLE teams (
     id serial PRIMARY KEY,

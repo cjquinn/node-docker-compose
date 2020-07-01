@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.APP_PORT;
-const db = pgp(`postgres://postgres:${process.env.POSTGRES_PASSWORD}@db:5432/${process.env.POSTGRES_DB}`);
+const db = pgp(`postgres://postgres:${process.env.POSTGRES_PASSWORD}@db:5432/postgres`);
 
 app.set('view engine', 'pug');
 

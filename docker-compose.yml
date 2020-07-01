@@ -3,7 +3,6 @@ services:
   node:
     build:
       context: .
-      dockerfile: Dockerfile-node
     command: npm start
     ports:
      - ${TARGET_PORT}:${APP_PORT}
@@ -13,13 +12,8 @@ services:
      - network
   db:
     image: postgres
-    ports:
-     - 5432:5432
-    env_file: .env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
      - data:/var/lib/postgresql/data
