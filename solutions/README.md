@@ -35,6 +35,29 @@ Once you have built your image and enter your `docker run` command you should be
 - `Dockerfile` reference - https://docs.docker.com/engine/reference/builder/
 - Command to build an image - https://docs.docker.com/engine/reference/commandline/build/
 - Command to run a container - https://docs.docker.com/engine/reference/run/
+
+## Solution
+
+### `Dockerfile`
+
+```
+FROM node:10
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm i
+RUN npm i -g nodemon
+
+CMD ["npm", "start"]
+```
+
+```
+docker build -t node-docker-compose .
+docker run -p 80:3000 node-docker-compose
+```
+
 # 2 - We need a database
 
 After running the image built in the previous step - `docker run your-image-name -p 80:3000` - you might notice that it still doesn't work when you go to http://localhost in your browser. This is because it needs a database! We are using [PostgreSQL](https://www.postgresql.org/) as our database system. Just like with Node.js lets assume our computer can't run it or that there is some configuration specific to our application that we want to distribute.
@@ -51,10 +74,40 @@ Fortunately for us there is a [Postgres Docker image](https://hub.docker.com/_/p
 - This can be completed in one `docker run` command
 - You will need to add the `./docker-entrypoint-initdb.d` as a volume - https://docs.docker.com/engine/reference/run/#volume-shared-filesystems
 
+## Testing
+
+Edit your `docker run` command to name the container `postgres-test` - `docker run --name postgres-test {the rest of your command}` - then run the following command in a separate terminal window to run a query against our Postgres database.
+
+```
+docker exec test-postgres psql -U postgres -d postgres -c "select * from teams"
+```
+
+This should output the following:
+
+```
+ id |                   name                   | position
+----+------------------------------------------+----------
+  1 | AG2R La Mondiale                         |        1
+  2 | EF Education First–Drapac p/b Cannondale |        2
+  3 | BMC Racing Team                          |        3
+  4 | Team Dimension Data                      |        4
+  5 | Bahrain–Merida                           |        5
+  6 | Team Katusha–Alpecin                     |        6
+  7 | Bora–Hansgrohe                           |        7
+  8 | Astana                                   |        8
+(8 rows)
+```
+
 ## Resources:
 
 - Postgres Docker image - https://hub.docker.com/_/postgres
 - Command to run a container - https://docs.docker.com/engine/reference/run/
+
+## Solution
+
+```
+docker run -it --rm --name test-postgres -v "$PWD"/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d -e POSTGRES_PASSWORD=secret postgres
+```
 
 # 3 - Putting it all together
 
@@ -83,3 +136,35 @@ Finally we are here! Run `docker-compose up` and go to http://localhost in your 
 ## Resources:
 
 - Everything `docker-compose` - https://docs.docker.com/compose/compose-file/
+
+## Solution
+
+```
+version: "3.8"
+services:
+  node:
+    build:
+      context: .
+    command: npm start
+    ports:
+     - ${TARGET_PORT}:${APP_PORT}
+    volumes:
+     - .:/usr/src/app
+    networks:
+     - network
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+     - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+     - data:/var/lib/postgresql/data
+    networks:
+     - network
+networks:
+  network:
+    driver: bridge
+volumes:
+  data:
+    driver: local
+```
